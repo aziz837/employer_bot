@@ -32,9 +32,10 @@ class Command(BaseCommand):
         conv_handler = ConversationHandler(
             entry_points=[CommandHandler('start', start)],
             states={
-                category:[CallbackQueryHandler(category)],
-                region:[CallbackQueryHandler(region)],
-                5: [CallbackQueryHandler(descriptions)]
+                2:[CallbackQueryHandler(category)],
+                3: [CallbackQueryHandler(descriptions)],
+                4:[MessageHandler(Filters.text & ~Filters.command, region)],
+                5: [CallbackQueryHandler(district)],
 
             },
             fallbacks=[CommandHandler('help', help)],

@@ -36,10 +36,16 @@ def start(update: Update, context: CallbackContext) -> None:
     ]
     reply_markup = InlineKeyboardMarkup(jobs)
 
-    update.message.reply_text('Categorydan birini kiriting :', reply_markup=reply_markup)
-    return category
+    update.message.reply_text('KIMSIZ UZI ? :', reply_markup=reply_markup)
+    return 2
    
-
+def descriptions(update: Update, context: CallbackContext):
+    query = update.callback_query
+    datas = query.data.split('_')
+    print(query)
+    text = 'Ish xaqida qisqacha malumot yozing'
+    query.message.reply_text(text)
+    return 4
 
 def category(update: Update, context: CallbackContext) :
     query = update.callback_query
@@ -52,37 +58,30 @@ def category(update: Update, context: CallbackContext) :
         'Qanday ish qilish kere: ',
         reply_markup=InlineKeyboardMarkup(buttons)
     )
-    return region
-
-def descriptions(update: Update, context: CallbackContext):
-    query = update.callback_query
-    datas = query.data.split('_')
-    print(query)
-    text = 'Ish xaqida qisqacha malumot yozing'
-    query.message.reply_text(text)
-    return 
-
+    return 3
 
 
 def region(update: Update, context: CallbackContext):
-    query = update.callback_query
-    datas = query.data.split('_')
-    print(datas)
+    
     regions = Region.objects.filter(parend_id=0)
     buttons= generateButtons(regions)
-    query.message.delete()
-    query.message.reply_text(
-        'Qaysi tumandansz: ', 
+    
+    update.message.reply_text(
+        'Qaysi Viloyatdansz: ', 
         reply_markup=InlineKeyboardMarkup(buttons)
     )
     return 5
 
 def district(update: Update, context: CallbackContext):
-    print(datas)
+
     query = update.callback_query
     datas = query.data.split('_')
-    disct = Region.objects.raw('SELECT * FROM bot_region where parend_id=%s',[datas])
-    buttons= generateButtons(regions)
+    if datas[0] == 'category':
+        cat_id = int(datas[1])
+        print(cat_id)
+        disct = Region.objects.raw('SELECT * FROM bot_region where parend_id=%s',[cat_id])
+        print(disct)
+        buttons= generateButtons(disct)
     query.message.delete()
     query.message.reply_text(
         'Qaysi tumandansz: ', 
