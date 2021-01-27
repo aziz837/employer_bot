@@ -1,6 +1,6 @@
 from telegram.ext import CommandHandler, MessageHandler, Filters
 from django_telegrambot.apps import DjangoTelegramBot
-from .services import *
+
 from .models import Category, Region
 
 from telegram.ext import (
@@ -52,29 +52,43 @@ def category(update: Update, context: CallbackContext) :
         'Qanday ish qilish kere: ',
         reply_markup=InlineKeyboardMarkup(buttons)
     )
-    return descriptions
+    return region
 
 def descriptions(update: Update, context: CallbackContext):
     query = update.callback_query
     datas = query.data.split('_')
-    print(datas)
-    query = update.callback_query
-    query.message.delete()
-    query.message.reply_text(
-        'Ish Xaqida qisqacha malumot yozing : ',
-    )
-    return 3
+    print(query)
+    text = 'Ish xaqida qisqacha malumot yozing'
+    query.message.reply_text(text)
+    return 
+
+
+
 def region(update: Update, context: CallbackContext):
     query = update.callback_query
     datas = query.data.split('_')
-    regions = Region.objects.get(parend_id=null)
+    print(datas)
+    regions = Region.objects.filter(parend_id=0)
     buttons= generateButtons(regions)
+    query.message.delete()
     query.message.reply_text(
-        'Ish Xaqida qisqacha malumot yozing : ', 
+        'Qaysi tumandansz: ', 
         reply_markup=InlineKeyboardMarkup(buttons)
     )
     return 5
-    
+
+def district(update: Update, context: CallbackContext):
+    print(datas)
+    query = update.callback_query
+    datas = query.data.split('_')
+    disct = Region.objects.raw('SELECT * FROM bot_region where parend_id=%s',[datas])
+    buttons= generateButtons(regions)
+    query.message.delete()
+    query.message.reply_text(
+        'Qaysi tumandansz: ', 
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
+
 def help_command(update, context):
     query = update.callback_query
     datas = query.data.split('_')

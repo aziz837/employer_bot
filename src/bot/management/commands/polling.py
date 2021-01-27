@@ -33,8 +33,8 @@ class Command(BaseCommand):
             entry_points=[CommandHandler('start', start)],
             states={
                 category:[CallbackQueryHandler(category)],
-                descriptions:[CallbackQueryHandler(descriptions)],
-                3: [CallbackQueryHandler(region)]
+                region:[CallbackQueryHandler(region)],
+                5: [CallbackQueryHandler(descriptions)]
 
             },
             fallbacks=[CommandHandler('help', help)],
