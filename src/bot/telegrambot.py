@@ -30,6 +30,7 @@ db = Category()
 def start(update: Update, context: CallbackContext) -> None:
     jobs = [
         [
+
             InlineKeyboardButton("Ish beruvchi", callback_data='1'),
             InlineKeyboardButton("Ish Oluvchi", callback_data='2'),
         ],
