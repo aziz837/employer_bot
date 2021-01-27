@@ -1,7 +1,7 @@
 from telegram.ext import CommandHandler, MessageHandler, Filters
 from django_telegrambot.apps import DjangoTelegramBot
 
-from .models import Category, Region
+from .models import Category, Region, User
 
 from telegram.ext import (
     CommandHandler,
@@ -28,6 +28,16 @@ logger = logging.getLogger(__name__)
 db = Category()
 
 def start(update: Update, context: CallbackContext) -> None:
+    tg_user = update.message.from_user
+    try:
+        user = User.objects.get(tg_id=tg_user.id)
+    except Exception:
+        user = None
+
+    if not user:
+        user = User(tg_id=tg_user.id, first_name=tg_user.first_name)
+        user.save()
+    
     jobs = [
         [
 

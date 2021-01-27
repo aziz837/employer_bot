@@ -17,12 +17,12 @@ class Region(models.Model):
 
 class User(models.Model):
     first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=20)
-    type_work = models.IntegerField()
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    tg_id = models.BigIntegerField(max_length=100, blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    type_work = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now=True, blank=True)
     update_at = models.DateTimeField(auto_now=True, blank=True)
 
     def __str__(self):
         return self.first_name
-    
