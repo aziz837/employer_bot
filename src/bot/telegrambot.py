@@ -35,9 +35,9 @@ def start(update: Update, context: CallbackContext) -> None:
         user = None
 
     if not user:
-        user = User(tg_id=tg_user.id, first_name=tg_user.first_name)
+        user = User(tg_id=tg_user.id, first_name=tg_user.first_name, last_name=tg_user.last_name)
         user.save()
-    
+
     jobs = [
         [
 
@@ -49,14 +49,30 @@ def start(update: Update, context: CallbackContext) -> None:
 
     update.message.reply_text('KIMSIZ UZI ? :', reply_markup=reply_markup)
     return 2
-   
-def descriptions(update: Update, context: CallbackContext):
+
+def get_phone_number(update: Update, context: CallbackContext):
     query = update.callback_query
     datas = query.data.split('_')
-    print(query)
-    text = 'Ish xaqida qisqacha malumot yozing'
+    text = 'Telefon nomeringizni kiriting: '
     query.message.reply_text(text)
     return 4
+
+
+def descriptions(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    phone_user = update.message.text
+    try:
+        user = User.objects.get(tg_id=tg_user.id)
+    except Exception:
+        user = None
+
+
+    user.phone=phone_user
+    user.save()
+
+    text = 'Ish xaqida qisqacha malumot yozing'
+    update.message.reply_text(text)
+    return 8
 
 def category(update: Update, context: CallbackContext) :
     query = update.callback_query
