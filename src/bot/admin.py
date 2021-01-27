@@ -1,13 +1,13 @@
 from django.contrib import admin
-from .forms import ProfileForm
-from .models import Profile, Message
+# from .forms import ProfileForm
+from .models import Category, Region
 
-@admin.register(Profile)
-class ProfileAdmin (admin.ModelAdmin):
-    list_display=('external_id', 'name')
-    form = ProfileForm
+@admin.register(Category)
+class CategoryAdmin (admin.ModelAdmin):
+    list_display=('title', 'parend_id')
+  
 
-@admin.register(Message)
-class MessageAdmin (admin.ModelAdmin):
-    list_display=('id', 'text')
+@admin.register(Region)
+class RegionAdmin (admin.ModelAdmin):
+    list_display=('id', 'title', 'parend_id')
     
