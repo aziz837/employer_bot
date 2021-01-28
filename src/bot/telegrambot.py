@@ -1,5 +1,4 @@
 from telegram.ext import CommandHandler, MessageHandler, Filters
-from django_telegrambot.apps import DjangoTelegramBot
 
 from .models import Category, Region, User
 
