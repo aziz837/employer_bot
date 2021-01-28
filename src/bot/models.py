@@ -32,3 +32,13 @@ class UserCategory(models.Model):
     created_at = models.DateTimeField(auto_now=True, blank=True)
     update_at = models.DateTimeField(auto_now=True, blank=True)
 
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField(blank=True, null=False)
+    location = models.CharField(max_length=200, blank=True, null=False)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.description
