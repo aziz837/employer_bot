@@ -13,11 +13,12 @@ from telegram.ext import (
 )
 from telegram import(
     ReplyKeyboardMarkup,
-    ReplyKeyboardRemove, 
-    Update,  
-    InlineKeyboardButton, 
-    InlineKeyboardMarkup
-) 
+    ReplyKeyboardRemove,
+    Update,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    KeyboardButton
+)
 
 
 import logging
@@ -30,12 +31,14 @@ def start(update: Update, context: CallbackContext) -> None:
     tg_user = update.message.from_user
     try:
         user = User.objects.get(tg_id=tg_user.id)
-    except Exception:
+    except Exception as e:
+        print('error: ', str(e))
         user = None
 
     if not user:
         user = User(tg_id=tg_user.id, first_name=tg_user.first_name, last_name=tg_user.last_name)
         user.save()
+    tell = user.phone
 
     jobs = [
         [
@@ -47,13 +50,22 @@ def start(update: Update, context: CallbackContext) -> None:
     reply_markup = InlineKeyboardMarkup(jobs)
 
     update.message.reply_text('KIMSIZ UZI ? :', reply_markup=reply_markup)
-    return 2
+
+    next = ''
+    if tell:
+        next = 5
+    else:
+        next = 2
+
+    return next
 
 def get_phone_number(update: Update, context: CallbackContext):
     query = update.callback_query
     datas = query.data.split('_')
     text = 'Telefon nomeringizni kiriting: '
-    query.message.reply_text(text)
+    # query.message.reply_text(text)
+    contact_number = KeyboardButton(text="Contact", request_contact=True)
+    query.message.reply_text(text, reply_markup=ReplyKeyboardMarkup([[contact_number]]))
     return 4
 
 
@@ -65,7 +77,8 @@ def descriptions(update: Update, context: CallbackContext):
     except Exception:
         user = None
 
-
+    print('user_id: ', tg_user.id)
+    print('user: ', user)
     user.phone=phone_user
     user.save()
 
@@ -88,12 +101,12 @@ def category(update: Update, context: CallbackContext) :
 
 
 def region(update: Update, context: CallbackContext):
-    
+
     regions = Region.objects.filter(parend_id=0)
     buttons= generateButtons(regions)
-    
+
     update.message.reply_text(
-        'Qaysi Viloyatdansz: ', 
+        'Qaysi Viloyatdansz: ',
         reply_markup=InlineKeyboardMarkup(buttons)
     )
     return 5
@@ -108,9 +121,13 @@ def district(update: Update, context: CallbackContext):
         disct = Region.objects.raw('SELECT * FROM bot_region where parend_id=%s',[cat_id])
         print(disct)
         buttons= generateButtons(disct)
+    else:
+        disct = Region.objects.raw('SELECT * FROM bot_region')
+        print(disct)
+        buttons = generateButtons(disct)
     query.message.delete()
     query.message.reply_text(
-        'Qaysi tumandansz: ', 
+        'Qaysi tumandansz: ',
         reply_markup=InlineKeyboardMarkup(buttons)
     )
 

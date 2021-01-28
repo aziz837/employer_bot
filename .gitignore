@@ -19,6 +19,7 @@ lib64/
 parts/
 sdist/
 var/
+db.sqlite3/
 Scripts/
 *.egg-info/
 .installed.cfg
