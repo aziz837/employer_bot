@@ -26,3 +26,9 @@ class User(models.Model):
 
     def __str__(self):
         return self.first_name
+class UserCategory(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    cat_id = models.ForeignKey(Category, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True, blank=True)
+    update_at = models.DateTimeField(auto_now=True, blank=True)
+
